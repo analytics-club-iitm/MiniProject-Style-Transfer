@@ -11,6 +11,6 @@
 
 **Pre-Requisites:** We expect you guys to have a basic understanding of nueral networks and a brief overview of convolutions would be a plus! Nevertheless feel free to join in, you would definitely learn loads :)  
 
-To join the session do fill this [form](https://forms.gle/nnjSU7b7Roz3JSFT9)
+**To join the session do fill this [form](https://forms.gle/nnjSU7b7Roz3JSFT9)**
 
-Don't forget to join the group [link](https://chat.whatsapp.com/C3xyDj6giRaFFtcv9ov3Jy). Incase the previous group is full, join [here](https://chat.whatsapp.com/IOtw4PSZDrdIttxaHa2RE8). **PS: Please make sure to join only one group!**
+**Don't forget to join the group [link](https://chat.whatsapp.com/C3xyDj6giRaFFtcv9ov3Jy). Incase the previous group is full, join [here](https://chat.whatsapp.com/IOtw4PSZDrdIttxaHa2RE8). PS: Please make sure to join only one group!**
