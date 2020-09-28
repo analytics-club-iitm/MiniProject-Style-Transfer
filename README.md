@@ -20,3 +20,9 @@
 **To join the session do fill this [form](https://forms.gle/nnjSU7b7Roz3JSFT9)**
 
 **Don't forget to join this [group](https://chat.whatsapp.com/C3xyDj6giRaFFtcv9ov3Jy). Incase the previous group is full, join [here](https://chat.whatsapp.com/IOtw4PSZDrdIttxaHa2RE8). PS: Please make sure to join only one group!**
+
+## TO DO before session starts
+
+- Please register on Github and register for the Github Student Developer Pack (should be approved in an hour or two) - [link](https://education.github.com/pack)
+- Once your registration is approved, utilise the promo code for availiing **Azure Credits**. You can also use AWS but it asks for your credit card info which many of you might hesitate to provide. 
+- Finally if you are interested to train the model please download the dataset from this [link](https://drive.google.com/file/d/1wZUSNbxFdpkY1kPua4xGIdcroEUHGabt/view).
