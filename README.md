@@ -24,5 +24,6 @@
 ## TO DO before session starts
 
 - Please register on Github and register for the Github Student Developer Pack (should be approved in an hour or two) - [link](https://education.github.com/pack)
-- Once your registration is approved, utilise the promo code for availiing **Azure Credits**. You can also use AWS but it asks for your credit card info which many of you might hesitate to provide. 
+- Once your registration is approved, utilise the promo code for availiing **Azure Credits**. You can also use AWS/GCP but they ask for your credit card info which many of you might hesitate to provide. Incase of AWS/GCP you need to increase the VCPU limit to 4/6 for all G instances while in Azure the student pack should give you access to 12GB cards. 
+- We are going to utilise the VMs only during training as charges incur by the hour and hence most of the implementation will be done locally. Please install pytorch, torchvision using conda or pip. Incase you have GPUs, do get your Nvidia drivers, CUDA and CUDNN setup.
 - Finally if you are interested to train the model please download the dataset from this [link](https://drive.google.com/file/d/1wZUSNbxFdpkY1kPua4xGIdcroEUHGabt/view).
