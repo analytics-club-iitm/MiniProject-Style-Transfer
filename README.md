@@ -19,7 +19,7 @@
 
 **To join the session do fill this [form](https://forms.gle/nnjSU7b7Roz3JSFT9)**
 
-**Don't forget to join this [group](https://chat.whatsapp.com/C3xyDj6giRaFFtcv9ov3Jy). Incase the previous group is full, join [here](https://chat.whatsapp.com/IOtw4PSZDrdIttxaHa2RE8). PS: Please make sure to join only one group!**
+**Don't forget to join this [group](https://chat.whatsapp.com/C3xyDj6giRaFFtcv9ov3Jy).**
 
 ## TO DO before session starts
 
@@ -33,3 +33,8 @@
 - **Oct 3rd** - Introduction to GANs, Understanding the paper, method and other similar models in style transfer. 
 - **Oct 4th** - Code Implementation (split into two sessions as its quite big), Setting up VMs for training Large models.
 - **Oct 5th** - Possible improvements, Exploring the GAN latent space, Deploying model using Dash and Flask, Doubt Session (if-any)
+
+## Session Recordings
+
+- **Oct 3rd** - [recording link](https://drive.google.com/file/d/1xkc7k_7ZpTrddwO7wHV4yNvozlVaeElL/view?usp=drivesdk), [annotated paper](assets/starganv2.pdf), [slides (to be uploaded)]()
+- **Oct 4th** - [sample dataset](https://drive.google.com/file/d/1KcgEXQRGzOZnCSxU-lzG62vXlK54da-p/view?usp=sharing)
