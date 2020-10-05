@@ -6,36 +6,66 @@
     <sub>Teaser Video: Top row denotes source images, and the leftmost column denotes the reference images from which the style is being transferred.</sub>
 </p>
 
-## Session Contents
+## Repository Contents
 
-- Introduction to GANs
-- Understanding and Implementing latest research paper from CVPR 2020 on Multi Domain Style Transfer.
-- Code along session
-- Setting up VMs for training large models. 
-- Model Interpretation and exploring GAN Latent Space.
-- Deploy trained model using Flask and Dash.
+- [annotated paper](./assets/starganv2.pdf)
+- [paper implementation codes](./baseline/)
+- [face alignment model](./app/facealignment.py) from [paper](https://arxiv.org/abs/1904.07399) 
+- [resnet model for attribute classification](./classifier/classifier.py)
+- [helper functions for latent interpolation](./app/interpolate.py)
+- [style codes with predicted attributes for all images](./app/attributes/)
+- [trained svm boudaries for selected attributed](./app/svms)
+- [app using dash and flask](./app/app.py)
 
-**Pre-Requisites:** We expect you guys to have a basic understanding of neural networks and a brief overview of convolutional neural networks would be a plus! Nevertheless feel free to join in, you would definitely learn loads :)  
+## Links
 
-**To join the session do fill this [form](https://forms.gle/nnjSU7b7Roz3JSFT9)**
+- celeb_a dataset (male, female) - [full](https://drive.google.com/file/d/1wZUSNbxFdpkY1kPua4xGIdcroEUHGabt/view), [sample](https://drive.google.com/file/d/1KcgEXQRGzOZnCSxU-lzG62vXlK54da-p/view?usp=sharing)
+- celeb_a attribute dataset - [link](https://drive.google.com/file/d/1X6QHlyJRLDdxpKcvlshCSxHrL71kkG0W/view?usp=sharing)
+- pretrained models - [starganv2](https://drive.google.com/file/d/1gSZjhmZGeV54EuhLlQ-8Poas4g07VoTC/view?usp=sharing), [classifier](https://drive.google.com/file/d/1dX5HsynnSnPSkjdO4XWYICz0VbnGdQoE/view?usp=sharing)
+- [Session 1 recording](https://drive.google.com/file/d/1xkc7k_7ZpTrddwO7wHV4yNvozlVaeElL/view?usp=drivesdk) - Intro to GANs, Understanding the paper.
+- Session 2 recording [part 1](https://drive.google.com/file/d/1ZEbiNfsydYahQtnQ4IxTxzEZaSNJSLQR/view?usp=drivesdk) - Dataloaders and basic model blocks, [part 2](https://drive.google.com/file/d/16dg3du6yQmyvH-r2yI11LvhpkvV5fl99/view?usp=drivesdk) - complete model, training and validation helper functions.
+- [Session 3 recording](https://drive.google.com/file/d/15UVlPspfu3Dv4nF5ntq5CRFFs7AjF92e/view?usp=sharing) - training large models on VMs, possible improvements, deploying app using dash and flask, interesting intuitions and manipulating latent space.
 
-**Don't forget to join this [group](https://chat.whatsapp.com/C3xyDj6giRaFFtcv9ov3Jy).**
+**Interpolation with reference images**
 
-## TO DO before session starts
+<p align="center">
+    <img src="assets/ref-interp.gif" />
+</p>
 
-- Please register on Github and register for the Github Student Developer Pack (should be approved in an hour or two) - [link](https://education.github.com/pack)
-- Once your registration is approved, utilise the promo code for availiing **Azure Credits**. You can also use AWS/GCP but they ask for your credit card info which many of you might hesitate to provide. Incase of AWS/GCP you need to increase the VCPU limit to 4/6 for all G instances while in Azure the student pack should give you access to 12GB cards. 
-- We are going to utilise the VMs only during training as charges incur by the hour and hence most of the implementation will be done locally. Please install pytorch, torchvision using conda or pip. Incase you have GPUs, do get your Nvidia drivers, CUDA and CUDNN setup.
-- Finally if you are interested to train the model please download the dataset from this [link](https://drive.google.com/file/d/1wZUSNbxFdpkY1kPua4xGIdcroEUHGabt/view).
+**Interpolation of latent space to manipulating certain attributes**
 
-## TimeLine
+<p align="center">
+    <img src="assets/latent-interp.gif" />
+</p>
 
-- **Oct 3rd** - Introduction to GANs, Understanding the paper, method and other similar models in style transfer. 
-- **Oct 4th** - Code Implementation (split into two sessions as its quite big), Setting up VMs for training Large models.
-- **Oct 5th** - Possible improvements, Exploring the GAN latent space, Deploying model using Dash and Flask, Doubt Session (if-any)
+**Masks generated using masking model to retain features like eyes, nose and mouth of the source image.**
 
-## Session Recordings
+<p align="center">
+    <img src="assets/mask.jpeg" />
+</p>
 
-- **Oct 3rd** - [recording link](https://drive.google.com/file/d/1xkc7k_7ZpTrddwO7wHV4yNvozlVaeElL/view?usp=drivesdk), [annotated paper](assets/starganv2.pdf), [slides (to be uploaded)]()
-- **Oct 4th** - [sample dataset](https://drive.google.com/file/d/1KcgEXQRGzOZnCSxU-lzG62vXlK54da-p/view?usp=sharing), [recording link](https://drive.google.com/file/d/16dg3du6yQmyvH-r2yI11LvhpkvV5fl99/view?usp=drivesdk), [code](./baseline/)
-- **Oct 5th** - [pretrained weights](https://drive.google.com/file/d/1gSZjhmZGeV54EuhLlQ-8Poas4g07VoTC/view?usp=sharing)
+## Interesting observations
+
+**Demon-like images during cross domain interpolation**
+
+<p align="center">
+    <img src="assets/demon.png" />
+</p>
+
+**Retention of domain characteristics irrespective of source images**
+
+<p align="center">
+    <img src="assets/ret-dom.png" />
+</p>
+
+**Well seperated domain latent spaces**
+
+<p align="center">
+    <img src="assets/lat.jpeg" idth="300" height="300"/>
+</p>
+
+**Grad Cam to visualise activations to understand each feature of the latent space**
+
+<p align="center">
+    <img src="assets/gradcam.jpeg" />
+</p>

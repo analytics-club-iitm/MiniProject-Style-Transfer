@@ -4,6 +4,13 @@ import torch.nn.functional as F
 import numpy as np
 import math
 
+"""
+an alternative for the normal instance norm
+essentially takes in input feature x and style image y 
+and aligns the mean and variance of x to match y. 
+has no learnable affline parameters instead it computes them 
+adaptively from the style input
+"""
 class AdaptiveInstanceNorm(nn.Module):
     def __init__(self, style_dim, num_features):
         super(AdaptiveInstanceNorm, self).__init__()
@@ -11,11 +18,25 @@ class AdaptiveInstanceNorm(nn.Module):
         self.fc = nn.Linear(style_dim, num_features*2)
 
     def forward(self, x, s):
+        """
+        alternative method:
+        gamma = self.fc1(s)
+        beta = self.fc2(s)
+        return (1+gamma)*self.norm(x) + beta
+
+        either (1+gamma) or gamma doesnt make a difference, just a matter of the value to which gamma converges
+        if (1+gamma) -> converges to 0 and if (gamma) -> converges to 1
+        """
         h = self.fc(s)
         h = h.view(h.size(0), h.size(1),1,1)
         gamma, beta = torch.chunk(h, chunks = 2, dim=1)
         return (1+gamma)*self.norm(x) + beta
 
+"""
+Basic block containing adaptive instance norm layers. 
+These are used in the "Decoder" portion of the generator and hence upsampling takes place. 
+This block uses the adaptive instance norm as it is the one receiving the style code.
+"""
 class AdaResBlock(nn.Module):
     def __init__(self, dim_in, dim_out, style_dim = 64, activ = nn.LeakyReLU(0.2), upsample = False):
         super(AdaResBlock, self).__init__()
@@ -28,6 +49,7 @@ class AdaResBlock(nn.Module):
         self.norm_1 = AdaptiveInstanceNorm(style_dim, dim_in)
         self.norm_2 = AdaptiveInstanceNorm(style_dim, dim_out)
 
+        # if the input and output size is not the same, we essentially use a 1x1 conv layer to manipulate the channel size.
         if self.shortcut:
             self.conv_1x1 = nn.Conv2d(dim_in,dim_out, kernel_size = 1, stride = 1, bias=False)
 
@@ -52,9 +74,16 @@ class AdaResBlock(nn.Module):
     
     def forward(self, x, s):
         out = self._residual(x,s)
-        output = (out + self._shortcut(x))/math.sqrt(2)
+        # since all our normalisation operations ensure unit variance we also need to do that while adding the residual connections
+        # hence we divide by sqrt(2) to ensure unit variance.
+        output = (out + self._shortcut(x))/math.sqrt(2) 
         return output
 
+"""
+Same as the adaptive res block except without the adaptive instance norm.
+These are used in the style encoder, discriminator and in the encoder of the generator. 
+Here downsampling operation is down unlike the upsampling in the Adaresblock
+"""
 class ResBlock(nn.Module):
     def __init__(self, dim_in, dim_out, style_dim = 64, activ = nn.LeakyReLU(0.2), downsample = False, normalize = False):
         super(ResBlock, self).__init__()
@@ -96,7 +125,9 @@ class ResBlock(nn.Module):
         out = self._residual(x)
         output = (out + self._shortcut(x))/math.sqrt(2)
         return output
-        
+"""
+predicts realness and fakeness of the image. It predicts this based on every domain and we take out the one which is needed. 
+"""        
 class Discriminator(nn.Module):
     def __init__(self, img_size = 256, num_domains = 2, max_conv_dim = 512):
         super(Discriminator, self).__init__()
@@ -129,7 +160,10 @@ class Discriminator(nn.Module):
         out = out[indx, y]
         return out
 
-
+"""
+Given an image x and its corresponding domain y, 
+the style encoder extracts the style code
+"""
 class StyleEncoder(nn.Module):
     def __init__(self, img_size = 256, style_dim = 64, num_domains = 2, max_conv_dim = 512):
         super(StyleEncoder, self).__init__()
@@ -167,6 +201,10 @@ class StyleEncoder(nn.Module):
         out = out[indx, y]
         return out
 
+"""
+Given a latent code z and a domain y, 
+the mapping network generates a style code
+"""
 class MappingNetwork(nn.Module):
     def __init__(self, latent_dim = 16, style_dim = 64, num_domains = 2):
         super(MappingNetwork, self).__init__()
@@ -199,6 +237,10 @@ class MappingNetwork(nn.Module):
         out = out[indx, y]
         return out
 
+"""
+Unlike the above mentioned networks, the generator does not generate images based on what domain but rather utilises the
+style code along with the source image to generate the final image. 
+"""
 class Generator(nn.Module):
     def __init__(self, img_size = 256, style_dim = 64, max_conv_dim = 512):
         super(Generator, self).__init__()
@@ -237,11 +279,25 @@ class Generator(nn.Module):
 
 
 if __name__ == "__main__":
-    device = torch.device("cpu")
+    device = torch.device("cuda")
     inp = torch.randn(1, 3, 256, 256).to(device)
     style_code = torch.randn(1, 64).to(device)
+    latent_space = torch.randn(1, 16).to(device)
+    
     generator = Generator().to(device)
-    #mapping = MappingNetwork().to(device)
-    #style = StyleEncoder().to
-    output = generator(inp, style_code)
-    print(output)
+    mapping = MappingNetwork().to(device)
+    style = StyleEncoder().to(device)
+    disc = Discriminator().to(device)
+
+    out = generator(inp, style_code)
+    print("generator output shape: ", out.shape)
+
+    out = mapping(style_code, np.array([0]))
+    print("mapping network output shape (for a single domain): ", out.shape)
+    
+    out = style(inp, np.array([0]))
+    print("style encoder output shape (for a single domain): ", out.shape)
+
+    out = disc(inp, np.array([0]))
+    print("discriminator output shape (for a single domain): ", out.shape)
+    
