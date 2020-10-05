@@ -33,7 +33,7 @@
 </p>
 
 <p align="center">
-    <b>Interpolation of latent space to manipulating certain attributes</b>
+    <b>Interpolation of latent space to manipulate certain attributes</b>
     <br>
     <img src="assets/latent-interp.gif" />
 </p>
