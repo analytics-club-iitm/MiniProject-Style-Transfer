@@ -6,7 +6,15 @@ import random
 from PIL import Image
 import torch
 
+"""
+CelebA dataset class inheriting modules from torch dataset class. 
+Must contain the following methods: __init__(), __getitem__(), __len__()
+"""
 class CelebA(Dataset):
+    """
+    our init method: sets up the class variables.
+    populate labels and img paths 
+    """
     def __init__(self, root_dir, config, transform=False):
         self.root_dir = root_dir
         self.config = config
@@ -30,6 +38,9 @@ class CelebA(Dataset):
         self.ref_labels = labels
         self._shuffle()
     
+    """
+    this method is called to shuffle the dataset and the corresponding labels.
+    """
     def _shuffle(self):
         temp = list(zip(self.src_imgs, self.src_labels))
         random.shuffle(temp)
@@ -43,6 +54,14 @@ class CelebA(Dataset):
         self.ref_imgs = list(self.ref_imgs)
         self.ref_labels = list(self.ref_labels)
     
+    """
+    initialising the transformation performed on the images.
+    randomly crop with a probability
+    resize images to fixed size
+    randomly flip images horizontally
+    convert PIL image to tensors
+    normalise image tensors to 0 mean and unit variance
+    """
     def _init_transform(self):
         crop = transforms.RandomResizedCrop(self.config["img_size"], scale=[0.8,1.0], ratio=[0.9,1.1])
         rand_crop = transforms.Lambda(lambda x: crop(x) if random.random()<self.config["prob"] else x)
@@ -54,6 +73,11 @@ class CelebA(Dataset):
             transforms.Normalize(mean=[0.5,0.5,0.5], std=[0.5,0.5,0.5])
         ])
 
+    """
+    used to return input and target tensors
+    returns items are: (src image, src label), (ref image, ref label, latent vec), (ref image, ref label, latent vec) 
+    basically source image, labels and two reference images with corresponding labels and latent vectors.
+    """
     def __getitem__(self, index):
 
         src = self.src_imgs[index]
@@ -77,6 +101,9 @@ class CelebA(Dataset):
 
         return src, src_label, ref1, ref2, ref_label, latent1, latent2
 
+    """
+    returns the length of the dataset
+    """
     def __len__(self):
         return len(self.src_imgs)
 
