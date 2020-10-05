@@ -26,46 +26,46 @@
 - Session 2 recording [part 1](https://drive.google.com/file/d/1ZEbiNfsydYahQtnQ4IxTxzEZaSNJSLQR/view?usp=drivesdk) - Dataloaders and basic model blocks, [part 2](https://drive.google.com/file/d/16dg3du6yQmyvH-r2yI11LvhpkvV5fl99/view?usp=drivesdk) - complete model, training and validation helper functions.
 - [Session 3 recording](https://drive.google.com/file/d/15UVlPspfu3Dv4nF5ntq5CRFFs7AjF92e/view?usp=sharing) - training large models on VMs, possible improvements, deploying app using dash and flask, interesting intuitions and manipulating latent space.
 
-**Interpolation with reference images**
-
 <p align="center">
+    <b>Interpolation with reference images</b>
+    <br>
     <img src="assets/ref-interp.gif" />
 </p>
 
-**Interpolation of latent space to manipulating certain attributes**
-
 <p align="center">
+    <b>Interpolation of latent space to manipulating certain attributes</b>
+    <br>
     <img src="assets/latent-interp.gif" />
 </p>
 
-**Masks generated using masking model to retain features like eyes, nose and mouth of the source image.**
-
 <p align="center">
+    <b>Masks generated using masking model to retain features like eyes, nose and mouth of the source image</b>
+    <br>
     <img src="assets/mask.jpeg" />
 </p>
 
 ## Interesting observations
 
-**Demon-like images during cross domain interpolation**
-
 <p align="center">
+    <b>Demon-like images during cross domain interpolation</b>
+    <br>
     <img src="assets/demon.png" />
 </p>
 
-**Retention of domain characteristics irrespective of source images**
-
 <p align="center">
+    <b>Retention of domain characteristics irrespective of source images</b>
+    <br>
     <img src="assets/ret-dom.png" />
 </p>
 
-**Well seperated domain latent spaces**
-
 <p align="center">
+    <b>Well seperated domain latent spaces</b>
+    <br>
     <img src="assets/lat.jpeg" idth="300" height="300"/>
 </p>
 
-**Grad Cam to visualise activations to understand each feature of the latent space**
-
 <p align="center">
+    <b>Grad Cam to visualise activations to understand each feature of the latent space</b>
+    <br>
     <img src="assets/gradcam.jpeg" />
 </p>
