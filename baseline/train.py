@@ -11,6 +11,9 @@ from torch.utils.data.sampler import WeightedRandomSampler
 from torch.utils.data import DataLoader
 import wandb
 
+"""
+since our dataset is not balanced we ensure a balanced dataset (from both domains - male and female) using a sampler. 
+"""
 def _make_balanced_sampler(labels):
     class_counts = np.bincount(labels) 
     class_weights = 1/class_counts
@@ -19,6 +22,10 @@ def _make_balanced_sampler(labels):
 
 class Trainer:
     def __init__(self, config):
+        """
+        basic stuff defining variables from our config file. 
+        config file is a yaml file and hence we use to ensure easy modifications for running multiple experiments.
+        """
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.config = config
 
@@ -52,7 +59,10 @@ class Trainer:
             os.makedirs(os.path.join(self.output_dir, "tr_with_ref"))
 
         self.step = 0
-
+        """
+        defining model networks and setting up optimizers
+        defining datasets and validation and training dataloader.
+        """
         self.generator = starganv2.Generator(self.img_size, self.style_dim).to(self.device)
         self.mapping_network = starganv2.MappingNetwork(self.latent_dim, self.style_dim, self.num_domains).to(self.device)
         self.style_encoder = starganv2.StyleEncoder(self.img_size, self.style_dim, self.num_domains).to(self.device)
@@ -88,7 +98,7 @@ class Trainer:
             """
             src.requires_grad_()
             out = self.discriminator(src, src_label)
-            loss_real = self.adversial_loss(out, 1)
+            loss_real = self.adversarial_loss(out, 1)
             loss_reg = self.r1_reg(out, src)
 
             with torch.no_grad():
@@ -96,7 +106,7 @@ class Trainer:
                 fake_img = self.generator(src, style_ref1)
             
             out = self.discriminator(fake_img, ref_label)
-            loss_fake = self.adversial_loss(out, 0)
+            loss_fake = self.adversarial_loss(out, 0)
             loss = loss_real + loss_fake + self.lambda_reg*loss_reg
             self._reset_grad()
             loss.backward()
@@ -113,7 +123,7 @@ class Trainer:
             """
             src.requires_grad_()
             out = self.discriminator(src, src_label)
-            loss_real = self.adversial_loss(out, 1)
+            loss_real = self.adversarial_loss(out, 1)
             loss_reg = self.r1_reg(out, src)
 
             with torch.no_grad():
@@ -121,7 +131,7 @@ class Trainer:
                 fake_img = self.generator(src, style_ref1)
             
             out = self.discriminator(fake_img, ref_label)
-            loss_fake = self.adversial_loss(out, 0)
+            loss_fake = self.adversarial_loss(out, 0)
             loss = loss_real + loss_fake + self.lambda_reg*loss_reg
             self._reset_grad()
             loss.backward()
@@ -142,7 +152,7 @@ class Trainer:
             style_ref1 = self.mapping_network(latent1, ref_label)
             fake_img1 = self.generator(src, style_ref1)
             out = self.discriminator(fake_img1, ref_label)
-            loss_adv = self.adversial_loss(out, 1)
+            loss_adv = self.adversarial_loss(out, 1)
 
             style_pred = self.style_encoder(fake_img1, ref_label)
             loss_style = torch.mean(torch.abs(style_pred-style_ref1))
@@ -178,7 +188,7 @@ class Trainer:
             style_ref1 = self.style_encoder(ref1, ref_label)
             fake_img1 = self.generator(src, style_ref1)
             out = self.discriminator(fake_img1, ref_label)
-            loss_adv = self.adversial_loss(out, 1)
+            loss_adv = self.adversarial_loss(out, 1)
 
             style_pred = self.style_encoder(fake_img1, ref_label)
             loss_style = torch.mean(torch.abs(style_pred-style_ref1))
@@ -233,7 +243,9 @@ class Trainer:
         while self.step <= self.max_iter:
             wandb.init(project="star-gan-v2")
             self.train()
-
+    """
+    saving image and logging via wandb
+    """
     def _save_image(self, x, n_col, filename, name, caption):
         x = (x+1)/2
         x = x.clamp_(0,1)
@@ -252,13 +264,13 @@ class Trainer:
         style_src = self.style_encoder(src, src_label)
         rec_src = self.generator(fake_ref, style_src)
 
-        imgs = torch.cat([src, ref, fake_ref, rec_src], dim=0).cpu()
+        imgs = torch.cat([src.cpu(), ref.cpu(), fake_ref.cpu(), rec_src.cpu()], dim=0).cpu()
         self._save_image(imgs, N, os.path.join(self.output_dir, "tr_and_rec", "{}.png".format(self.step)), "translate and reconstruct", self.step)
 
     def _translate_with_ref(self, src, ref, ref_label):
         N, C, H, W = src.size()
         wb = torch.ones(1, C, H, W).to(self.device)
-        src_with_wb = torch.cat([wb, src], dim=0).cpu()
+        src_with_wb = torch.cat([wb, src], dim=0).cpu() # white space
 
         """
         (ref, ref_label) -> style_encoder -> (style_refs)+(src) -> generator -> (generated_imgs)
@@ -326,12 +338,20 @@ class Trainer:
         self.style_optim.zero_grad()
         self.disc_optim.zero_grad()
 
-
-    def adversial_loss(self, logits, targets):
+    """
+    normal cross entropy - used to train disrciminator to differentiate between real and fake images, 
+    also for training generator in the adversarial loss
+    """
+    def adversarial_loss(self, logits, targets):
         targets = torch.full_like(logits, fill_value=targets)
         loss = F.binary_cross_entropy_with_logits(logits, targets)
         return loss
     
+    """
+    since we are always training the generator to predict the generated images are false, the training would never reach convergence.
+    Hence to account for the fact that after some time the generator would generate real images, we penalise the model
+    if large gradients are calculated when the image generated by the generator is real.
+    """
     def r1_reg(self, logits, inp):
         batch_size = inp.size(0)
         grad_dout = torch.autograd.grad(outputs=logits.sum(), inputs=inp, create_graph=True, retain_graph=True, only_inputs=True)[0]
