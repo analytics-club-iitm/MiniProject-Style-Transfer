@@ -37,4 +37,4 @@
 ## Session Recordings
 
 - **Oct 3rd** - [recording link](https://drive.google.com/file/d/1xkc7k_7ZpTrddwO7wHV4yNvozlVaeElL/view?usp=drivesdk), [annotated paper](assets/starganv2.pdf), [slides (to be uploaded)]()
-- **Oct 4th** - [sample dataset](https://drive.google.com/file/d/1KcgEXQRGzOZnCSxU-lzG62vXlK54da-p/view?usp=sharing)
+- **Oct 4th** - [sample dataset](https://drive.google.com/file/d/1KcgEXQRGzOZnCSxU-lzG62vXlK54da-p/view?usp=sharing), [recording link](https://drive.google.com/file/d/16dg3du6yQmyvH-r2yI11LvhpkvV5fl99/view?usp=drivesdk), [code](./baseline/)
