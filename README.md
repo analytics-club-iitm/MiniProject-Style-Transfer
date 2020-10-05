@@ -59,13 +59,13 @@
 </p>
 
 <p align="center">
-    <img src="assets/lat.jpeg" />
+    <img src="assets/lat.jpeg" idth="300" height="300"/>
     <br/>
     <sub>Well seperated domain latent spaces</sub>
 </p>
 
 <p align="center">
-    <img src="assets/grad-cam.jpeg" />
+    <img src="assets/gradcam.jpeg" />
     <br/>
     <sub>Grad Cam to visualise convolutional activations to understand what each feature of latent space corresponds to</sub>
 </p>
