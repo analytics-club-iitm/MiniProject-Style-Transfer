@@ -53,7 +53,7 @@
 </p>
 
 <p align="center">
-    <b>Retention of domain characteristics irrespective of source images</b>
+    <b>Retention of domain characteristics irrespective of reference image</b>
     <br>
     <img src="assets/ret-dom.png" />
 </p>
